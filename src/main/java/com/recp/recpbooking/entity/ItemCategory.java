@@ -82,7 +82,8 @@ public class ItemCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "DishCategory{" + "id=" + id + ", shortCord=" + shortCord + ", name=" + name + ", description=" + description + ", status=" + status + '}';
+        return "ItemCategory{" + "id=" + id + ", shortCord=" + shortCord + ", name=" + name + ", description=" + description + ", status=" + status + ", items=" + items + '}';
     }
+
 
 }
