@@ -3,42 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.recp.recpbooking.entity;
+package com.recp.recpbooking.dto;
 
-import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import com.recp.recpbooking.common.StatusEnum;
 
 /**
  *
- * @author roshan_inova
+ * @author Roshan_inova
  */
-@Entity
-public class Items implements Serializable {
+public class ItemDto {
 
-    @Id
-    private Integer id;
     private String shortCode;
     private String name;
     private String description;
     private String imgUrl;
     private String type;
-    @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "Dish_category", nullable = false, referencedColumnName = "id")
-    private ItemCategory category;
-    private String status;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Integer category;
+    private Double price;
+    private boolean isGroup;
+    private StatusEnum status;
 
     public String getShortCode() {
         return shortCode;
@@ -80,25 +63,41 @@ public class Items implements Serializable {
         this.type = type;
     }
 
-    public ItemCategory getCategory() {
+    public Integer getCategory() {
         return category;
     }
 
-    public void setCategory(ItemCategory category) {
+    public void setCategory(Integer category) {
         this.category = category;
     }
 
-    public String getStatus() {
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public boolean isIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
+
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        return "Dishes{" + "id=" + id + ", shortCode=" + shortCode + ", name=" + name + ", description=" + description + ", imgUrl=" + imgUrl + ", type=" + type + ", category=" + category + ", status=" + status + '}';
+        return "InsertItemRequestDto{" + "shortCode=" + shortCode + ", name=" + name + ", description=" + description + ", imgUrl=" + imgUrl + ", type=" + type + ", category=" + category + ", price=" + price + ", isGroup=" + isGroup + ", status=" + status + '}';
     }
 
 }
