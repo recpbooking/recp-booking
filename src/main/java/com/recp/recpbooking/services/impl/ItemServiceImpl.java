@@ -12,24 +12,34 @@ import com.recp.recpbooking.dto.ItemDto;
 import com.recp.recpbooking.dto.ItemGroupDto;
 import com.recp.recpbooking.dto.ItemGroupResponseDto;
 import com.recp.recpbooking.dto.ItemGroupUpdateDto;
+import com.recp.recpbooking.dto.ItemResponseDto;
 import com.recp.recpbooking.dto.ItemUpdateDto;
 import com.recp.recpbooking.entity.Item;
 import com.recp.recpbooking.entity.ItemCategory;
 import com.recp.recpbooking.repository.ItemCategoryRepository;
 import com.recp.recpbooking.repository.ItemRepository;
 import com.recp.recpbooking.services.ItemService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -46,8 +56,11 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     ItemCategoryRepository itemCategoryRepository;
 
+    @Value("${sgm.item.img.path}")
+    private String imgPath;
+
     @Override
-    public ResponseEntity saveItem(ItemDto insertItemRequestDto, String user) {
+    public ResponseEntity saveItem(ItemDto insertItemRequestDto, MultipartFile uploadFile, String user) throws Exception {
         Item item = new Item();
         LOGGER.info("Item Save Init : " + insertItemRequestDto);
         BaseResponceDto responceDto = new BaseResponceDto();
@@ -55,6 +68,10 @@ public class ItemServiceImpl implements ItemService {
             BeanUtils.copyProperties(insertItemRequestDto, item);
             Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(insertItemRequestDto.getCategory());
             item.setCategory(itemCategorys.get());
+            if (uploadFile != null) {
+                String imageUrl = saveImage(uploadFile, item.getShortCode());
+                item.setImgUrl(imageUrl);
+            }
             itemRepository.save(item);
             responceDto.setErrorCode(HttpStatus.CREATED.value());
             responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
@@ -66,9 +83,9 @@ public class ItemServiceImpl implements ItemService {
             throw e;
         }
     }
-    
+
     @Override
-    public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, String user) {
+    public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, MultipartFile uploadFile, String user) throws Exception {
         Item item = new Item();
         LOGGER.info("Item update Init : " + itemUpdateDto);
         BaseResponceDto responceDto = new BaseResponceDto();
@@ -76,6 +93,10 @@ public class ItemServiceImpl implements ItemService {
             BeanUtils.copyProperties(itemUpdateDto, item);
             Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemUpdateDto.getCategory());
             item.setCategory(itemCategorys.get());
+            if (uploadFile != null) {
+                String imageUrl = saveImage(uploadFile, item.getShortCode());
+                item.setImgUrl(imageUrl);
+            }
             itemRepository.save(item);
             responceDto.setErrorCode(HttpStatus.OK.value());
             responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
@@ -89,7 +110,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ResponseEntity saveItemGroup(ItemGroupDto itemGroupDto, String user) {
+    public ResponseEntity saveItemGroup(ItemGroupDto itemGroupDto, MultipartFile uploadFile, String user) throws Exception {
         Item item = new Item();
         LOGGER.info("Item Save Init : " + itemGroupDto);
         BaseResponceDto responceDto = new BaseResponceDto();
@@ -103,6 +124,10 @@ public class ItemServiceImpl implements ItemService {
                 item1.getItemGroups().add(item);
             }
             item.getGroupItems().addAll((Collection<? extends Item>) items);
+            if (uploadFile != null) {
+                String imageUrl = saveImage(uploadFile, item.getShortCode());
+                item.setImgUrl(imageUrl);
+            }
             itemRepository.save(item);
             responceDto.setErrorCode(HttpStatus.CREATED.value());
             responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
@@ -116,7 +141,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, String user) {
+    public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, MultipartFile uploadFile, String user) throws Exception {
         Item item = new Item();
         LOGGER.info("Item Group Save Init : " + itemGroupUpdateDto);
         BaseResponceDto responceDto = new BaseResponceDto();
@@ -130,6 +155,10 @@ public class ItemServiceImpl implements ItemService {
                 item1.getItemGroups().add(item);
             }
             item.getGroupItems().addAll((Collection<? extends Item>) items);
+            if (uploadFile != null) {
+                String imageUrl = saveImage(uploadFile, item.getShortCode());
+                item.setImgUrl(imageUrl);
+            }
             itemRepository.save(item);
             responceDto.setErrorCode(HttpStatus.CREATED.value());
             responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
@@ -172,6 +201,73 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return itemGroupDtos;
+    }
+
+    private String saveImage(MultipartFile uploadFile, String imgName) throws IOException {
+
+        byte[] bytes;
+        try {
+            LOGGER.info("Start File Upload");
+            bytes = uploadFile.getBytes();
+            String ext = ".jpg";
+            int lastIndex = uploadFile.getOriginalFilename().lastIndexOf(".");
+            if (lastIndex != -1) {
+                ext = uploadFile.getOriginalFilename().substring(lastIndex, uploadFile.getOriginalFilename().length());
+            }
+            String imageName = imgPath + imgName + ext;
+            Path path = Paths.get(imageName);
+            File directory = new File(String.valueOf(imgPath));
+            File image = new File(String.valueOf(imageName));
+            Date date = new Date();
+            Long time = date.getTime();
+            if (!directory.exists()) {
+                directory.mkdirs();
+                if (image.exists()) {
+                    LOGGER.info("Start File rename : " + image.getAbsolutePath());
+                    File imageNew = new File(String.valueOf(imageName + time));
+                    image.renameTo(imageNew);
+                    LOGGER.info("File rename compleated as " + imageNew.getAbsolutePath());
+                }
+            }
+            Files.write(path, bytes);
+            LOGGER.info("File Uploaded : " + imageName);
+            return imageName;
+        } catch (IOException ex) {
+            LOGGER.error("File Upload error", ex);
+            throw ex;
+        }
+    }
+
+    @Override
+    public ItemResponseDto getItemByShortCode(String shortCode) {
+        Item item = itemRepository.findOneByIsGroupAndShortCode(false, shortCode);
+        if (item != null) {
+            ItemResponseDto itemDto = new ItemResponseDto();
+            BeanUtils.copyProperties(item, itemDto);
+            return itemDto;
+        }
+        return null;
+    }
+
+    @Override
+    public ItemGroupResponseDto getGroupByShortCode(String shortCode) {
+        Item item = itemRepository.findOneByIsGroupAndShortCode(true, shortCode);
+        if (item != null) {
+            ItemGroupResponseDto itemGroupResponseDto = new ItemGroupResponseDto();
+            BeanUtils.copyProperties(item, itemGroupResponseDto);
+            return itemGroupResponseDto;
+        }
+
+        ItemGroupResponseDto itemGroupDto = new ItemGroupResponseDto();
+        BeanUtils.copyProperties(item, itemGroupDto);
+        for (Item groupItem : item.getGroupItems()) {
+            ItemDto dto = new ItemDto();
+            BeanUtils.copyProperties(groupItem, dto);
+            itemGroupDto.getItems().add(dto);
+
+        }
+
+        return null;
     }
 
 }

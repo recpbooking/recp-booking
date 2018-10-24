@@ -17,4 +17,5 @@ import org.springframework.stereotype.Repository;
 public interface ItemRepository extends CrudRepository<Item, Integer> {
 
     Iterable<Item> findAllByIsGroup(boolean b);
+    Item findOneByIsGroupAndShortCode(boolean b, String ShortCode);
 }

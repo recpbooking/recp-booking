@@ -6,14 +6,12 @@
 package com.recp.recpbooking.dto;
 
 import com.recp.recpbooking.common.StatusEnum;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author Roshan_inova
  */
-public class ItemGroupResponseDto {
+public class ItemResponseDto {
 
     private Integer id;
     private String shortCode;
@@ -23,11 +21,12 @@ public class ItemGroupResponseDto {
     private String type;
     private Integer category;
     private Double price;
-    private boolean isGroup = true;
-    private int itemCount;
-    private int selectionCount;
+    private boolean isGroup;
     private StatusEnum status;
-    List<ItemDto> items = new ArrayList();
+
+    public String getShortCode() {
+        return shortCode;
+    }
 
     public Integer getId() {
         return id;
@@ -35,10 +34,6 @@ public class ItemGroupResponseDto {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getShortCode() {
-        return shortCode;
     }
 
     public void setShortCode(String shortCode) {
@@ -101,22 +96,6 @@ public class ItemGroupResponseDto {
         this.isGroup = isGroup;
     }
 
-    public int getItemCount() {
-        return itemCount;
-    }
-
-    public void setItemCount(int itemCount) {
-        this.itemCount = itemCount;
-    }
-
-    public int getSelectionCount() {
-        return selectionCount;
-    }
-
-    public void setSelectionCount(int selectionCount) {
-        this.selectionCount = selectionCount;
-    }
-
     public StatusEnum getStatus() {
         return status;
     }
@@ -125,17 +104,9 @@ public class ItemGroupResponseDto {
         this.status = status;
     }
 
-    public List<ItemDto> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ItemDto> items) {
-        this.items = items;
-    }
-
     @Override
     public String toString() {
-        return "ItemGroupDto{" + "shortCode=" + shortCode + ", name=" + name + ", description=" + description + ", imgUrl=" + imgUrl + ", type=" + type + ", category=" + category + ", price=" + price + ", isGroup=" + isGroup + ", itemCount=" + itemCount + ", selectionCount=" + selectionCount + ", status=" + status + ", items=" + items + '}';
+        return "InsertItemRequestDto{" + "shortCode=" + shortCode + ", name=" + name + ", description=" + description + ", imgUrl=" + imgUrl + ", type=" + type + ", category=" + category + ", price=" + price + ", isGroup=" + isGroup + ", status=" + status + '}';
     }
 
 }

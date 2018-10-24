@@ -7,10 +7,13 @@ package com.recp.recpbooking.services;
 
 import com.recp.recpbooking.dto.ItemDto;
 import com.recp.recpbooking.dto.ItemGroupDto;
+import com.recp.recpbooking.dto.ItemGroupResponseDto;
 import com.recp.recpbooking.dto.ItemGroupUpdateDto;
+import com.recp.recpbooking.dto.ItemResponseDto;
 import com.recp.recpbooking.dto.ItemUpdateDto;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -18,16 +21,20 @@ import org.springframework.http.ResponseEntity;
  */
 public interface ItemService {
 
-    public ResponseEntity saveItem(ItemDto itemDto, String user);
+    public ResponseEntity saveItem(ItemDto itemDto, MultipartFile uploadFile, String user) throws Exception;
     
-    public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, String user);
+    public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, MultipartFile uploadFile, String user) throws Exception;
     
-    public ResponseEntity saveItemGroup(ItemGroupDto itemGroupDto, String user);
+    public ResponseEntity saveItemGroup(ItemGroupDto itemGroupDto, MultipartFile uploadFile, String user) throws Exception;
     
-    public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, String user);
+    public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, MultipartFile uploadFile, String user) throws Exception;
 
     public List<ItemDto> getItemList();
 
     public List<?> getItemGroupList();
+
+    public ItemResponseDto getItemByShortCode(String shortCode);
+
+    public ItemGroupResponseDto getGroupByShortCode(String shortCode);
 
 }

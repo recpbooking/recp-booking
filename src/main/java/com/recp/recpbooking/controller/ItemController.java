@@ -10,7 +10,9 @@ import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.dto.BaseResponceDto;
 import com.recp.recpbooking.dto.ItemDto;
 import com.recp.recpbooking.dto.ItemGroupDto;
+import com.recp.recpbooking.dto.ItemGroupResponseDto;
 import com.recp.recpbooking.dto.ItemGroupUpdateDto;
+import com.recp.recpbooking.dto.ItemResponseDto;
 import com.recp.recpbooking.dto.ItemUpdateDto;
 import com.recp.recpbooking.services.ItemService;
 import java.util.ArrayList;
@@ -22,11 +24,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -36,12 +42,12 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RequestMapping("${rbs.item.api.url}")
 public class ItemController {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
-
+    
     @Autowired
     ItemService itemService;
-
+    
     @GetMapping("/")
     public ResponseEntity<?>
             getItemList() {
@@ -50,7 +56,20 @@ public class ItemController {
         LOGGER.info("Item List successfuly Fetched");
         return ResponseEntity.ok(itemDtos);
     }
-
+    
+    @GetMapping("/byshortcode/{short_code}")
+    public ResponseEntity<?>
+            getItemByShortCode(@PathVariable(name = "short_code") String shortCode) {
+        LOGGER.info("Item List fetching Start");
+        ItemResponseDto itemDto = itemService.getItemByShortCode(shortCode);
+        if (itemDto != null) {
+            LOGGER.info("Item List successfuly Fetched");
+            return ResponseEntity.ok(itemDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Item short code");
+        }
+    }
+    
     @GetMapping("/group")
     public ResponseEntity<?>
             getItemGroupList() {
@@ -59,13 +78,26 @@ public class ItemController {
         LOGGER.info("Item List successfuly Fetched");
         return ResponseEntity.ok(itemGroupDtos);
     }
-
+    
+    @GetMapping("/group/byshortcode/{short_code}")
+    public ResponseEntity<?>
+            getGroupByShortCode(@PathVariable(name = "short_code") String shortCode) {
+        LOGGER.info("Item List fetching Start");
+        ItemGroupResponseDto itemDto = itemService.getGroupByShortCode(shortCode);
+        if (itemDto != null) {
+            LOGGER.info("Item List successfuly Fetched");
+            return ResponseEntity.ok(itemDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Item short code");
+        }
+    }
+    
     @PostMapping("/")
-    public ResponseEntity<?> addItem(@RequestBody ItemDto itemDto) {
+    public ResponseEntity<?> addItem(@ModelAttribute ItemDto itemDto, @RequestParam(name = "file", required = false) MultipartFile uploadFile) {
         String user = "";
         try {
             LOGGER.info("Item Creation Start");
-            ResponseEntity responseEntity = itemService.saveItem(itemDto, user);
+            ResponseEntity responseEntity = itemService.saveItem(itemDto, uploadFile, user);
             LOGGER.info("Item Created successfuly");
             return responseEntity;
         } catch (Exception e) {
@@ -77,13 +109,13 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }
     }
-
+    
     @PutMapping("/")
-    public ResponseEntity<?> updateItem(@RequestBody ItemUpdateDto itemUpdateDto) {
+    public ResponseEntity<?> updateItem(@RequestBody ItemUpdateDto itemUpdateDto, @RequestParam("file") MultipartFile uploadFile) {
         String user = "";
         try {
             LOGGER.info("Item Update Start");
-            ResponseEntity responseEntity = itemService.updateItem(itemUpdateDto, user);
+            ResponseEntity responseEntity = itemService.updateItem(itemUpdateDto, uploadFile, user);
             LOGGER.info("Item Created successfuly");
             return responseEntity;
         } catch (Exception e) {
@@ -95,13 +127,13 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }
     }
-
+    
     @PostMapping("/group")
-    public ResponseEntity<?> addItemGroup(@RequestBody ItemGroupDto itemGroupDto) {
+    public ResponseEntity<?> addItemGroup(@RequestBody ItemGroupDto itemGroupDto, @RequestParam("file") MultipartFile uploadFile) {
         String user = "";
         try {
             LOGGER.info("Item Group Creation Start");
-            ResponseEntity responseEntity = itemService.saveItemGroup(itemGroupDto, user);
+            ResponseEntity responseEntity = itemService.saveItemGroup(itemGroupDto, uploadFile, user);
             LOGGER.info("Item Group Created successfuly");
             return responseEntity;
         } catch (Exception e) {
@@ -113,13 +145,13 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }
     }
-
+    
     @PutMapping("/group")
-    public ResponseEntity<?> updateItemGroup(@RequestBody ItemGroupUpdateDto itemGroupUpdateDto) {
+    public ResponseEntity<?> updateItemGroup(@RequestBody ItemGroupUpdateDto itemGroupUpdateDto, @RequestParam("file") MultipartFile uploadFile) {
         String user = "";
         try {
             LOGGER.info("Item Group Update Start");
-            ResponseEntity responseEntity = itemService.updateItemGroup(itemGroupUpdateDto, user);
+            ResponseEntity responseEntity = itemService.updateItemGroup(itemGroupUpdateDto, uploadFile, user);
             LOGGER.info("Item Group Updated successfuly");
             return responseEntity;
         } catch (Exception e) {
