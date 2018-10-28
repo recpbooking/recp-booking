@@ -11,6 +11,8 @@ import com.recp.recpbooking.dto.BaseResponceDto;
 import com.recp.recpbooking.dto.ItemDto;
 import com.recp.recpbooking.dto.ItemGroupDto;
 import com.recp.recpbooking.dto.ItemGroupResponseDto;
+import com.recp.recpbooking.dto.ItemGroupUpdateDto;
+import com.recp.recpbooking.dto.ItemUpdateDto;
 import com.recp.recpbooking.entity.Item;
 import com.recp.recpbooking.entity.ItemCategory;
 import com.recp.recpbooking.repository.ItemCategoryRepository;
@@ -60,7 +62,28 @@ public class ItemServiceImpl implements ItemService {
             LOGGER.info("Item Saved successful");
             return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
         } catch (Exception e) {
-            LOGGER.error("Item Saved Failed", e);
+            LOGGER.error("Item Saving Failed", e);
+            throw e;
+        }
+    }
+    
+    @Override
+    public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, String user) {
+        Item item = new Item();
+        LOGGER.info("Item update Init : " + itemUpdateDto);
+        BaseResponceDto responceDto = new BaseResponceDto();
+        try {
+            BeanUtils.copyProperties(itemUpdateDto, item);
+            Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemUpdateDto.getCategory());
+            item.setCategory(itemCategorys.get());
+            itemRepository.save(item);
+            responceDto.setErrorCode(HttpStatus.OK.value());
+            responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
+            responceDto.setErrorType(StatusEnum.SUCCESS.toString());
+            LOGGER.info("Item successfully updated");
+            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
+        } catch (Exception e) {
+            LOGGER.error("Item Failed to update", e);
             throw e;
         }
     }
@@ -76,8 +99,6 @@ public class ItemServiceImpl implements ItemService {
             item.setCategory(itemCategorys.get());
             Iterable<Item> items = itemRepository.findAllById(itemGroupDto.getItems());
 
-//            ItemGroup itemGroup = new ItemGroup();
-//            itemGroup.setGroupItems((List<Item>) items);
             for (Item item1 : items) {
                 item1.getItemGroups().add(item);
             }
@@ -86,10 +107,37 @@ public class ItemServiceImpl implements ItemService {
             responceDto.setErrorCode(HttpStatus.CREATED.value());
             responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
             responceDto.setErrorType(StatusEnum.SUCCESS.toString());
-            LOGGER.info("Item Saved successful");
+            LOGGER.info("Item Group Saved successful");
             return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
         } catch (Exception e) {
-            LOGGER.error("Item Saved Failed", e);
+            LOGGER.error("Item Group Saving Failed", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, String user) {
+        Item item = new Item();
+        LOGGER.info("Item Group Save Init : " + itemGroupUpdateDto);
+        BaseResponceDto responceDto = new BaseResponceDto();
+        try {
+            BeanUtils.copyProperties(itemGroupUpdateDto, item);
+            Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemGroupUpdateDto.getCategory());
+            item.setCategory(itemCategorys.get());
+            Iterable<Item> items = itemRepository.findAllById(itemGroupUpdateDto.getItems());
+
+            for (Item item1 : items) {
+                item1.getItemGroups().add(item);
+            }
+            item.getGroupItems().addAll((Collection<? extends Item>) items);
+            itemRepository.save(item);
+            responceDto.setErrorCode(HttpStatus.CREATED.value());
+            responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
+            responceDto.setErrorType(StatusEnum.SUCCESS.toString());
+            LOGGER.info("Item Group Saved successful");
+            return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
+        } catch (Exception e) {
+            LOGGER.error("Item Group Saving Failed", e);
             throw e;
         }
     }

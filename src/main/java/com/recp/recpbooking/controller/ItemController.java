@@ -10,6 +10,8 @@ import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.dto.BaseResponceDto;
 import com.recp.recpbooking.dto.ItemDto;
 import com.recp.recpbooking.dto.ItemGroupDto;
+import com.recp.recpbooking.dto.ItemGroupUpdateDto;
+import com.recp.recpbooking.dto.ItemUpdateDto;
 import com.recp.recpbooking.services.ItemService;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,6 +78,24 @@ public class ItemController {
         }
     }
 
+    @PutMapping("/")
+    public ResponseEntity<?> updateItem(@RequestBody ItemUpdateDto itemUpdateDto) {
+        String user = "";
+        try {
+            LOGGER.info("Item Update Start");
+            ResponseEntity responseEntity = itemService.updateItem(itemUpdateDto, user);
+            LOGGER.info("Item Created successfuly");
+            return responseEntity;
+        } catch (Exception e) {
+            LOGGER.error("Iten Update error", e);
+            BaseResponceDto responceDto = new BaseResponceDto();
+            responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
+            responceDto.setErrorMessage(ResponseMessage.itemSavedFailed);
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
+        }
+    }
+
     @PostMapping("/group")
     public ResponseEntity<?> addItemGroup(@RequestBody ItemGroupDto itemGroupDto) {
         String user = "";
@@ -85,6 +106,24 @@ public class ItemController {
             return responseEntity;
         } catch (Exception e) {
             LOGGER.error("Iten Group creation error", e);
+            BaseResponceDto responceDto = new BaseResponceDto();
+            responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
+            responceDto.setErrorMessage(ResponseMessage.itemGroupSavedFailed);
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
+        }
+    }
+
+    @PutMapping("/group")
+    public ResponseEntity<?> updateItemGroup(@RequestBody ItemGroupUpdateDto itemGroupUpdateDto) {
+        String user = "";
+        try {
+            LOGGER.info("Item Group Update Start");
+            ResponseEntity responseEntity = itemService.updateItemGroup(itemGroupUpdateDto, user);
+            LOGGER.info("Item Group Updated successfuly");
+            return responseEntity;
+        } catch (Exception e) {
+            LOGGER.error("Iten Group Update error", e);
             BaseResponceDto responceDto = new BaseResponceDto();
             responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
             responceDto.setErrorMessage(ResponseMessage.itemGroupSavedFailed);

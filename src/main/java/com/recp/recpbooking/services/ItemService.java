@@ -7,7 +7,8 @@ package com.recp.recpbooking.services;
 
 import com.recp.recpbooking.dto.ItemDto;
 import com.recp.recpbooking.dto.ItemGroupDto;
-import com.recp.recpbooking.dto.ItemGroupResponseDto;
+import com.recp.recpbooking.dto.ItemGroupUpdateDto;
+import com.recp.recpbooking.dto.ItemUpdateDto;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
@@ -17,9 +18,13 @@ import org.springframework.http.ResponseEntity;
  */
 public interface ItemService {
 
-    public ResponseEntity saveItem(ItemDto insertItemRequestDto, String user);
+    public ResponseEntity saveItem(ItemDto itemDto, String user);
+    
+    public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, String user);
     
     public ResponseEntity saveItemGroup(ItemGroupDto itemGroupDto, String user);
+    
+    public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, String user);
 
     public List<ItemDto> getItemList();
 
