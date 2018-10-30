@@ -22,6 +22,7 @@ public class ItemDto {
     private Double price;
     private boolean isGroup;
     private StatusEnum status;
+    private Integer id;
 
     public String getShortCode() {
         return shortCode;
@@ -93,6 +94,15 @@ public class ItemDto {
 
     public void setStatus(StatusEnum status) {
         this.status = status;
+    }
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

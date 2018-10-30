@@ -7,13 +7,9 @@ package com.recp.recpbooking.controller;
 
 import com.recp.recpbooking.common.ResponseMessage;
 import com.recp.recpbooking.common.StatusEnum;
-import com.recp.recpbooking.dto.BaseResponceDto;
-import com.recp.recpbooking.dto.ItemDto;
-import com.recp.recpbooking.dto.ItemGroupDto;
-import com.recp.recpbooking.dto.ItemGroupResponseDto;
-import com.recp.recpbooking.dto.ItemGroupUpdateDto;
-import com.recp.recpbooking.dto.ItemResponseDto;
-import com.recp.recpbooking.dto.ItemUpdateDto;
+import com.recp.recpbooking.dto.*;
+import com.recp.recpbooking.entity.ItemCategory;
+import com.recp.recpbooking.services.ItemCategoryService;
 import com.recp.recpbooking.services.ItemService;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +42,12 @@ public class ItemController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
     
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
+    @Autowired
+    private ItemCategoryService itemCategoryService;
+
     
-    @GetMapping("/")
+    @GetMapping("/itemList")
     public ResponseEntity<?>
             getItemList() {
         LOGGER.info("Item List fetching Start");
@@ -92,12 +91,12 @@ public class ItemController {
         }
     }
     
-    @PostMapping("/")
-    public ResponseEntity<?> addItem(@ModelAttribute ItemDto itemDto, @RequestParam(name = "file", required = false) MultipartFile uploadFile) {
+    @PostMapping("/save")
+    public ResponseEntity<?> addItem(@RequestBody ItemDto itemDto) {
         String user = "";
         try {
             LOGGER.info("Item Creation Start");
-            ResponseEntity responseEntity = itemService.saveItem(itemDto, uploadFile, user);
+            ResponseEntity responseEntity = itemService.saveItem(itemDto, null, user);
             LOGGER.info("Item Created successfuly");
             return responseEntity;
         } catch (Exception e) {
@@ -162,5 +161,20 @@ public class ItemController {
             responceDto.setErrorType(StatusEnum.ERROR.toString());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }
+    }
+
+    @GetMapping("/itemCategoryList")
+    public ResponseEntity<?>
+    getItemCategory() {
+        List<ItemCategoryDto> itemCategoryList =new ArrayList<>();
+        try {
+            LOGGER.info("Item List fetching Start");
+            itemCategoryList = itemCategoryService.getItemCategoryList();
+            LOGGER.info("Item List successfuly Fetched");
+
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
+        }
+        return ResponseEntity.ok(itemCategoryList);
     }
 }
