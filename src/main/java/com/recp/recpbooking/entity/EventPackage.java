@@ -11,7 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,10 +32,19 @@ public class EventPackage implements Serializable {
     private Double amount;
     private Double maxDiscount;
     private String status;
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            mappedBy = "eventPackage")
-    private List<PackageItem> packageItems = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.ALL,
+//            fetch = FetchType.LAZY,
+//            mappedBy = "eventPackages")
+//    
+//    private List<Item> itemGroups = new ArrayList();
+    
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "packageItems",
+            joinColumns = {
+                @JoinColumn(name = "packageItemId")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "packageId")})
+    private List<Item> packageItems = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -102,11 +113,11 @@ public class EventPackage implements Serializable {
         this.status = status;
     }
 
-    public List<PackageItem> getPackageItems() {
+    public List<Item> getPackageItems() {
         return packageItems;
     }
 
-    public void setPackageItems(List<PackageItem> packageItems) {
+    public void setPackageItems(List<Item> packageItems) {
         this.packageItems = packageItems;
     }
 

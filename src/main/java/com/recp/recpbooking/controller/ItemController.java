@@ -15,7 +15,6 @@ import com.recp.recpbooking.dto.ItemGroupUpdateDto;
 import com.recp.recpbooking.dto.ItemResponseDto;
 import com.recp.recpbooking.dto.ItemUpdateDto;
 import com.recp.recpbooking.services.ItemService;
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

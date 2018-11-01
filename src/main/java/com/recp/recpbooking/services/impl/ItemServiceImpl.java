@@ -192,7 +192,7 @@ public class ItemServiceImpl implements ItemService {
             ItemGroupResponseDto itemGroupDto = new ItemGroupResponseDto();
             BeanUtils.copyProperties(item, itemGroupDto);
             for (Item groupItem : item.getGroupItems()) {
-                ItemDto dto = new ItemDto();
+                ItemResponseDto dto = new ItemResponseDto();
                 BeanUtils.copyProperties(groupItem, dto);
                 itemGroupDto.getItems().add(dto);
 
@@ -261,7 +261,7 @@ public class ItemServiceImpl implements ItemService {
         ItemGroupResponseDto itemGroupDto = new ItemGroupResponseDto();
         BeanUtils.copyProperties(item, itemGroupDto);
         for (Item groupItem : item.getGroupItems()) {
-            ItemDto dto = new ItemDto();
+            ItemResponseDto dto = new ItemResponseDto();
             BeanUtils.copyProperties(groupItem, dto);
             itemGroupDto.getItems().add(dto);
 

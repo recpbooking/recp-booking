@@ -75,6 +75,9 @@ public class Item implements Serializable {
     @ManyToMany(mappedBy = "groupItems")
     private List<Item> itemGroups = new ArrayList();
 
+    @ManyToMany(mappedBy = "packageItems")
+    private List<EventPackage> eventPackages = new ArrayList<>();
+
     public Integer getId() {
         return id;
     }
@@ -201,6 +204,14 @@ public class Item implements Serializable {
 
     public void setGroupItems(List<Item> groupItems) {
         this.groupItems = groupItems;
+    }
+
+    public List<EventPackage> getEventPackages() {
+        return eventPackages;
+    }
+
+    public void setEventPackages(List<EventPackage> eventPackages) {
+        this.eventPackages = eventPackages;
     }
 
     @Override

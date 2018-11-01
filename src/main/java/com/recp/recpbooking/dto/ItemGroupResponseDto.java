@@ -27,7 +27,7 @@ public class ItemGroupResponseDto {
     private int itemCount;
     private int selectionCount;
     private StatusEnum status;
-    List<ItemDto> items = new ArrayList();
+    List<ItemResponseDto> items = new ArrayList();
 
     public Integer getId() {
         return id;
@@ -125,11 +125,11 @@ public class ItemGroupResponseDto {
         this.status = status;
     }
 
-    public List<ItemDto> getItems() {
+    public List<ItemResponseDto> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemDto> items) {
+    public void setItems(List<ItemResponseDto> items) {
         this.items = items;
     }
 
