@@ -7,11 +7,19 @@ package com.recp.recpbooking.services;
 
 import com.recp.recpbooking.dto.CustomerDto;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
  * @author roshan_inova
  */
 public interface CustomerService {
-    public List<CustomerDto> getCustomerList();
+
+    ResponseEntity<?> saveCustomer(CustomerDto customerDto, String user) throws Exception;
+
+    List<CustomerDto> getCustomerList();
+
+    List<CustomerDto> getCustomerListByMobileNo(String mobileNo);
+
+    List<CustomerDto> getCustomerListByNameLike(String name);
 }

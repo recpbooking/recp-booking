@@ -17,4 +17,7 @@ public class ResponseMessage {
     public static String itemGroupSavedFailed = "Item Group Creating failed.";
     public static String packageSavedSuccess = "Package successfuly Created.";
     public static String packageSavedFailed = "Package Creating failed.";
+
+    public static String customerSavedSuccess = "Customer successfuly Created.";
+    public static String customerSavedFailed = "Customer Creating failed.";
 }

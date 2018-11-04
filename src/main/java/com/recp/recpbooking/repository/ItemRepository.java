@@ -9,6 +9,8 @@ import com.recp.recpbooking.entity.Item;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  *
  * @author Roshan_inova
@@ -18,4 +20,5 @@ public interface ItemRepository extends CrudRepository<Item, Integer> {
 
     Iterable<Item> findAllByIsGroup(boolean b);
     Item findOneByIsGroupAndShortCode(boolean b, String ShortCode);
+
 }
