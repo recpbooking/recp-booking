@@ -5,6 +5,7 @@
  */
 package com.recp.recpbooking.services;
 
+import com.recp.recpbooking.dto.PackageDto;
 import com.recp.recpbooking.dto.PackageItemDto;
 import com.recp.recpbooking.dto.PackageResponseDto;
 import java.util.List;
@@ -22,4 +23,5 @@ public interface EventPackageService {
 
     public ResponseEntity saveEventPackage(PackageItemDto packageItemDto, String user);
     
+    public ResponseEntity updateEventPackage(PackageDto packageDto, String user);
 }

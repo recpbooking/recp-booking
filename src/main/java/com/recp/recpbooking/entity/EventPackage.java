@@ -41,9 +41,9 @@ public class EventPackage implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "packageItems",
             joinColumns = {
-                @JoinColumn(name = "packageItemId")},
+                @JoinColumn(name = "packageId")},
             inverseJoinColumns = {
-                @JoinColumn(name = "packageId")})
+                @JoinColumn(name = "packageItemId")})
     private List<Item> packageItems = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)

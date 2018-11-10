@@ -51,15 +51,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> getCustomerListByMobileNo(String mobileNo) {
-        Iterable<Customer> customers = customerRepository.findOneByStatusAndMobileNo(StatusEnum.ACTIVE.toString(), mobileNo);
-        List<CustomerDto> customerDtos = new ArrayList();
-        for (Customer customer : customers) {
-            CustomerDto customerDto = new CustomerDto();
-            BeanUtils.copyProperties(customer, customerDto);
-            customerDtos.add(customerDto);
-        }
-        return customerDtos;
+    public CustomerDto getCustomerListByMobileNo(String mobileNo) {
+        Customer customer = customerRepository.findOneByStatusAndMobileNo(StatusEnum.ACTIVE.toString(), mobileNo);
+
+        CustomerDto customerDto = new CustomerDto();
+        BeanUtils.copyProperties(customer, customerDto);
+
+        return customerDto;
     }
 
     @Override
@@ -85,6 +83,25 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepository.save(customer);
             responceDto.setErrorCode(HttpStatus.CREATED.value());
             responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
+            responceDto.setErrorType(StatusEnum.SUCCESS.toString());
+            LOGGER.info("Customer Saved successful");
+            return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
+        } catch (Exception e) {
+            LOGGER.error("Customer Saving Failed", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> updateCustomer(CustomerDto customerDto, String user) {
+        try {
+            LOGGER.info("Customer Save Init : " + customerDto);
+            BaseResponceDto responceDto = new BaseResponceDto();
+            Customer customer = new Customer();
+            BeanUtils.copyProperties(customerDto, customer);
+            customerRepository.save(customer);
+            responceDto.setErrorCode(HttpStatus.CREATED.value());
+            responceDto.setErrorMessage(ResponseMessage.customerUpdateSuccess);
             responceDto.setErrorType(StatusEnum.SUCCESS.toString());
             LOGGER.info("Customer Saved successful");
             return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);

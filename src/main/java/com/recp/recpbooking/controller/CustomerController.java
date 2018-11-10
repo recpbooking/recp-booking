@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +52,7 @@ public class CustomerController {
     public ResponseEntity<?>
             getCustomerListByMobileNo(@RequestParam String mobileNo) {
         LOGGER.info("Customer List By Mobile No fetching Start");
-        List<CustomerDto> customerDtos = customerService.getCustomerListByMobileNo(mobileNo);
+        CustomerDto customerDtos = customerService.getCustomerListByMobileNo(mobileNo);
         LOGGER.info("Customer List By Mobile No successfuly Fetched");
         return ResponseEntity.ok(customerDtos);
     }
@@ -65,21 +66,22 @@ public class CustomerController {
         return ResponseEntity.ok(customerDtos);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> addItemGroup(@RequestBody CustomerDto customerDto) {
+          @PutMapping("/")
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto) {
         String user = "";
         try {
-            LOGGER.info("Customer Creation Start");
-            ResponseEntity responseEntity = customerService.saveCustomer(customerDto, user);
+            LOGGER.info("Customer Update Start");
+            ResponseEntity responseEntity = customerService.updateCustomer(customerDto, user);
             LOGGER.info("Customer Created successfuly");
             return responseEntity;
         } catch (Exception e) {
-            LOGGER.error("Customer creation error", e);
+            LOGGER.error("Customer Update error", e);
             BaseResponceDto responceDto = new BaseResponceDto();
             responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
-            responceDto.setErrorMessage(ResponseMessage.itemGroupSavedFailed);
+            responceDto.setErrorMessage(ResponseMessage.itemSavedFailed);
             responceDto.setErrorType(StatusEnum.ERROR.toString());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }
     }
+       
 }

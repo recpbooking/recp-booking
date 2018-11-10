@@ -19,7 +19,9 @@ public interface CustomerService {
 
     List<CustomerDto> getCustomerList();
 
-    List<CustomerDto> getCustomerListByMobileNo(String mobileNo);
+    CustomerDto getCustomerListByMobileNo(String mobileNo);
 
     List<CustomerDto> getCustomerListByNameLike(String name);
+
+    ResponseEntity<?> updateCustomer(CustomerDto customerDto, String user);
 }

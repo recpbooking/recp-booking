@@ -21,6 +21,7 @@ import com.recp.recpbooking.repository.ItemRepository;
 import com.recp.recpbooking.services.EventPackageService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -98,7 +99,7 @@ public class EventPackageServiceImpl implements EventPackageService {
             BeanUtils.copyProperties(packageItemDto, eventPackage);
             Iterable<Item> items = itemRepository.findAllById(packageItemDto.getPackageItems());
             List<Item> itemList = Lists.newArrayList(items);
-            eventPackage.getPackageItems().addAll(itemList);
+            eventPackage.setPackageItems(itemList);
             eventPackageRepository.save(eventPackage);
 
             responceDto.setErrorCode(HttpStatus.CREATED.value());
@@ -108,6 +109,38 @@ public class EventPackageServiceImpl implements EventPackageService {
             return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
         } catch (Exception e) {
             LOGGER.error("Error in Save Package", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity updateEventPackage(PackageDto packageDto, String user) {
+        try {
+            BaseResponceDto responceDto = new BaseResponceDto();
+            LOGGER.info("Start to Updsate Package : " + packageDto);
+            Optional<EventPackage> eventPackageOp = eventPackageRepository.findById(packageDto.getId());
+            if (eventPackageOp.isPresent()) {
+                EventPackage eventPackage = eventPackageOp.get();
+                BeanUtils.copyProperties(packageDto, eventPackage);
+                Iterable<Item> items = itemRepository.findAllById(packageDto.getPackageItems());
+                List<Item> itemList = Lists.newArrayList(items);
+                eventPackage.setPackageItems(itemList);
+                eventPackageRepository.save(eventPackage);
+
+                responceDto.setErrorCode(HttpStatus.CREATED.value());
+                responceDto.setErrorMessage(ResponseMessage.packageSavedSuccess);
+                responceDto.setErrorType(StatusEnum.SUCCESS.toString());
+                LOGGER.info("Package Saved successful");
+                return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
+            } else {
+                responceDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+                responceDto.setErrorMessage("Package Not Found");
+                responceDto.setErrorType(StatusEnum.ERROR.toString());
+                LOGGER.info("Package Not Found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responceDto);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error in update Package", e);
             throw e;
         }
     }

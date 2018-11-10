@@ -8,6 +8,7 @@ package com.recp.recpbooking.controller;
 import com.recp.recpbooking.common.ResponseMessage;
 import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.dto.BaseResponceDto;
+import com.recp.recpbooking.dto.PackageDto;
 import com.recp.recpbooking.dto.PackageItemDto;
 import com.recp.recpbooking.dto.PackageResponseDto;
 import com.recp.recpbooking.services.EventPackageService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,6 +74,24 @@ public class EventPackageController {
             BaseResponceDto responceDto = new BaseResponceDto();
             responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
             responceDto.setErrorMessage(ResponseMessage.packageSavedFailed);
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<?> updatePackage(@ModelAttribute PackageDto packageDto) {
+        String user = "";
+        try {
+            LOGGER.info("Package Updated Start");
+            ResponseEntity responseEntity = eventPackageService.updateEventPackage(packageDto, user);
+            LOGGER.info("Package Updated successfuly");
+            return responseEntity;
+        } catch (Exception e) {
+            LOGGER.error("Package Updating error", e);
+            BaseResponceDto responceDto = new BaseResponceDto();
+            responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
+            responceDto.setErrorMessage(ResponseMessage.packageUpdatingFailed);
             responceDto.setErrorType(StatusEnum.ERROR.toString());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }

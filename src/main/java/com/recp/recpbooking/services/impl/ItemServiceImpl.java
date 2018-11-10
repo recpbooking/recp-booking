@@ -86,26 +86,36 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ResponseEntity updateItem(ItemUpdateDto itemUpdateDto, MultipartFile uploadFile, String user) throws Exception {
-        Item item = new Item();
-        LOGGER.info("Item update Init : " + itemUpdateDto);
+        Optional<Item> itemOp = itemRepository.findById(itemUpdateDto.getId());
         BaseResponceDto responceDto = new BaseResponceDto();
-        try {
-            BeanUtils.copyProperties(itemUpdateDto, item);
-            Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemUpdateDto.getCategory());
-            item.setCategory(itemCategorys.get());
-            if (uploadFile != null) {
-                String imageUrl = saveImage(uploadFile, item.getShortCode());
-                item.setImgUrl(imageUrl);
+        if (itemOp.isPresent()) {
+            Item item = itemOp.get();
+
+            LOGGER.info("Item update Init : " + itemUpdateDto);
+            try {
+                BeanUtils.copyProperties(itemUpdateDto, item);
+                Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemUpdateDto.getCategory());
+                item.setCategory(itemCategorys.get());
+                if (uploadFile != null) {
+                    String imageUrl = saveImage(uploadFile, item.getShortCode());
+                    item.setImgUrl(imageUrl);
+                }
+                itemRepository.save(item);
+                responceDto.setErrorCode(HttpStatus.OK.value());
+                responceDto.setErrorMessage(ResponseMessage.itemUpdatedSuccess);
+                responceDto.setErrorType(StatusEnum.SUCCESS.toString());
+                LOGGER.info("Item successfully updated");
+                return ResponseEntity.status(HttpStatus.OK).body(responceDto);
+            } catch (Exception e) {
+                LOGGER.error("Item Failed to update", e);
+                throw e;
             }
-            itemRepository.save(item);
-            responceDto.setErrorCode(HttpStatus.OK.value());
-            responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
-            responceDto.setErrorType(StatusEnum.SUCCESS.toString());
-            LOGGER.info("Item successfully updated");
-            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
-        } catch (Exception e) {
-            LOGGER.error("Item Failed to update", e);
-            throw e;
+        } else {
+            responceDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            responceDto.setErrorMessage("Item Not Found");
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            LOGGER.info("Item Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responceDto);
         }
     }
 
@@ -142,32 +152,43 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ResponseEntity updateItemGroup(ItemGroupUpdateDto itemGroupUpdateDto, MultipartFile uploadFile, String user) throws Exception {
-        Item item = new Item();
+
         LOGGER.info("Item Group Save Init : " + itemGroupUpdateDto);
         BaseResponceDto responceDto = new BaseResponceDto();
-        try {
-            BeanUtils.copyProperties(itemGroupUpdateDto, item);
-            Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemGroupUpdateDto.getCategory());
-            item.setCategory(itemCategorys.get());
-            Iterable<Item> items = itemRepository.findAllById(itemGroupUpdateDto.getItems());
+        Optional<Item> itemOp = itemRepository.findById(itemGroupUpdateDto.getId());
+        if (itemOp.isPresent()) {
+            Item item = itemOp.get();
 
-            for (Item item1 : items) {
-                item1.getItemGroups().add(item);
+            try {
+                BeanUtils.copyProperties(itemGroupUpdateDto, item);
+                Optional<ItemCategory> itemCategorys = itemCategoryRepository.findById(itemGroupUpdateDto.getCategory());
+                item.setCategory(itemCategorys.get());
+                Iterable<Item> items = itemRepository.findAllById(itemGroupUpdateDto.getItems());
+                item.setGroupItems((List<Item>) items);
+                for (Item item1 : items) {
+                    item1.getItemGroups().add(item);
+                }
+//                item.getGroupItems().addAll((Collection<? extends Item>) items);
+                if (uploadFile != null) {
+                    String imageUrl = saveImage(uploadFile, item.getShortCode());
+                    item.setImgUrl(imageUrl);
+                }
+                itemRepository.save(item);
+                responceDto.setErrorCode(HttpStatus.CREATED.value());
+                responceDto.setErrorMessage(ResponseMessage.itemUpdatedSuccess);
+                responceDto.setErrorType(StatusEnum.SUCCESS.toString());
+                LOGGER.info("Item Group Saved successful");
+                return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
+            } catch (Exception e) {
+                LOGGER.error("Item Group Saving Failed", e);
+                throw e;
             }
-            item.getGroupItems().addAll((Collection<? extends Item>) items);
-            if (uploadFile != null) {
-                String imageUrl = saveImage(uploadFile, item.getShortCode());
-                item.setImgUrl(imageUrl);
-            }
-            itemRepository.save(item);
-            responceDto.setErrorCode(HttpStatus.CREATED.value());
-            responceDto.setErrorMessage(ResponseMessage.itemSavedSuccess);
-            responceDto.setErrorType(StatusEnum.SUCCESS.toString());
-            LOGGER.info("Item Group Saved successful");
-            return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
-        } catch (Exception e) {
-            LOGGER.error("Item Group Saving Failed", e);
-            throw e;
+        } else {
+            responceDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            responceDto.setErrorMessage("Item Not Found");
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            LOGGER.info("Item Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responceDto);
         }
     }
 
@@ -269,7 +290,5 @@ public class ItemServiceImpl implements ItemService {
 
         return null;
     }
-
-
 
 }

@@ -108,11 +108,13 @@ public class ItemController {
     }
     
     @PutMapping("/")
-    public ResponseEntity<?> updateItem(@RequestBody ItemUpdateDto itemUpdateDto, @RequestParam("file") MultipartFile uploadFile) {
+//    public ResponseEntity<?> updateItem(@RequestBody ItemUpdateDto itemUpdateDto, @RequestParam("file") MultipartFile uploadFile) {
+    public ResponseEntity<?> updateItem(@RequestBody ItemUpdateDto itemUpdateDto) {
         String user = "";
         try {
             LOGGER.info("Item Update Start");
-            ResponseEntity responseEntity = itemService.updateItem(itemUpdateDto, uploadFile, user);
+//            ResponseEntity responseEntity = itemService.updateItem(itemUpdateDto, uploadFile, user);
+            ResponseEntity responseEntity = itemService.updateItem(itemUpdateDto, null, user);
             LOGGER.info("Item Created successfuly");
             return responseEntity;
         } catch (Exception e) {
@@ -126,11 +128,13 @@ public class ItemController {
     }
     
     @PostMapping("/group")
-    public ResponseEntity<?> addItemGroup(@RequestBody ItemGroupDto itemGroupDto, @RequestParam("file") MultipartFile uploadFile) {
+//    public ResponseEntity<?> addItemGroup(@RequestBody ItemGroupDto itemGroupDto, @RequestParam("file") MultipartFile uploadFile) {
+    public ResponseEntity<?> addItemGroup(@RequestBody ItemGroupDto itemGroupDto) {
         String user = "";
         try {
             LOGGER.info("Item Group Creation Start");
-            ResponseEntity responseEntity = itemService.saveItemGroup(itemGroupDto, uploadFile, user);
+//            ResponseEntity responseEntity = itemService.saveItemGroup(itemGroupDto, uploadFile, user);
+            ResponseEntity responseEntity = itemService.saveItemGroup(itemGroupDto, null, user);
             LOGGER.info("Item Group Created successfuly");
             return responseEntity;
         } catch (Exception e) {
@@ -144,11 +148,13 @@ public class ItemController {
     }
     
     @PutMapping("/group")
-    public ResponseEntity<?> updateItemGroup(@RequestBody ItemGroupUpdateDto itemGroupUpdateDto, @RequestParam("file") MultipartFile uploadFile) {
+//    public ResponseEntity<?> updateItemGroup(@RequestBody ItemGroupUpdateDto itemGroupUpdateDto, @RequestParam("file") MultipartFile uploadFile) {
+    public ResponseEntity<?> updateItemGroup(@RequestBody ItemGroupUpdateDto itemGroupUpdateDto) {
         String user = "";
         try {
             LOGGER.info("Item Group Update Start");
-            ResponseEntity responseEntity = itemService.updateItemGroup(itemGroupUpdateDto, uploadFile, user);
+//            ResponseEntity responseEntity = itemService.updateItemGroup(itemGroupUpdateDto, uploadFile, user);
+            ResponseEntity responseEntity = itemService.updateItemGroup(itemGroupUpdateDto, null, user);
             LOGGER.info("Item Group Updated successfuly");
             return responseEntity;
         } catch (Exception e) {
