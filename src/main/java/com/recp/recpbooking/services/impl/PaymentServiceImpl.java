@@ -229,7 +229,7 @@ public class PaymentServiceImpl implements PaymentService {
                     LOGGER.info("Payment Event Income succesfuly updated");
                 } else {
                     LOGGER.info("Payment Event Expence identified");
-                    if (eventRefundCategory.equalsIgnoreCase(payment.getTransactionCategory().getShoreCode())) {
+                    if (eventRefundCategory.equalsIgnoreCase(payment.getTransactionCategory().getShortCode())) {
                         LOGGER.info("Payment Event refund updating");
                         Boolean isRefund = Boolean.TRUE;
                         isRefund = isCancalation ? !isRefund : isRefund;
