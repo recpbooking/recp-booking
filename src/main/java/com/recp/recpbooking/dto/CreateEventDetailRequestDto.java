@@ -6,7 +6,6 @@
 package com.recp.recpbooking.dto;
 
 import com.recp.recpbooking.common.StatusEnum;
-import java.util.Date;
 
 /**
  *
@@ -23,11 +22,7 @@ public class CreateEventDetailRequestDto {
     private double unitPrice;
     private double discount;
     private double netAmount;
-    /*
-    Audit History
-     */
-    private Date created;
-    private Date updated;
+    
     private StatusEnum status;
 
     public Long getId() {
@@ -100,22 +95,6 @@ public class CreateEventDetailRequestDto {
 
     public void setNetAmount(double netAmount) {
         this.netAmount = netAmount;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public StatusEnum getStatus() {

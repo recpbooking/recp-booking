@@ -19,11 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -60,9 +61,22 @@ public class EventPackageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Item short code");
         }
     }
+            
+    @GetMapping("/bystatus")
+    public ResponseEntity<?>
+            getPackageByStatus(@RequestParam StatusEnum[] statuses) {
+        LOGGER.info("Package List fetching Start");
+        List<?> eventPackageDtos = eventPackageService.getEventPackageByStatuses(statuses);
+        if (eventPackageDtos != null) {
+            LOGGER.info("Package List successfuly Fetched");
+            return ResponseEntity.ok(eventPackageDtos);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Recods Found");
+        }
+    }
 
     @PostMapping("/")
-    public ResponseEntity<?> addPackage(@ModelAttribute PackageItemDto packageItemDto) {
+    public ResponseEntity<?> addPackage(@RequestBody PackageItemDto packageItemDto) {
         String user = "";
         try {
             LOGGER.info("Package Creation Start");
@@ -80,7 +94,7 @@ public class EventPackageController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> updatePackage(@ModelAttribute PackageDto packageDto) {
+    public ResponseEntity<?> updatePackage(@RequestBody PackageDto packageDto) {
         String user = "";
         try {
             LOGGER.info("Package Updated Start");

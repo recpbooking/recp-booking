@@ -29,12 +29,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Roshan_inova
  */
 @Service
+@Transactional
 public class EventPackageServiceImpl implements EventPackageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventPackageServiceImpl.class);
@@ -49,21 +51,9 @@ public class EventPackageServiceImpl implements EventPackageService {
     public List<?> getEventPackageList() {
         LOGGER.info("Package List fetching Start");
         Iterable<EventPackage> eventPackages = eventPackageRepository.findAll();
-        List<PackageDto> packageDtos = new ArrayList();
+        List<PackageResponseDto> packageDtos = new ArrayList();
         for (EventPackage eventPackage : eventPackages) {
-            PackageDto packageDto = new PackageDto();
-            for (Item packageItem : eventPackage.getPackageItems()) {
-                ItemGroupResponseDto groupResponseDto = new ItemGroupResponseDto();
-                for (Item groupItem : packageItem.getGroupItems()) {
-                    ItemResponseDto itemResponseDto = new ItemResponseDto();
-                    BeanUtils.copyProperties(groupItem, itemResponseDto);
-                    groupResponseDto.getItems().add(itemResponseDto);
-                }
-                BeanUtils.copyProperties(packageItem, groupResponseDto);
-                packageDtos.add(packageDto);
-            }
-
-            BeanUtils.copyProperties(eventPackage, packageDto);
+            PackageResponseDto packageDto = getPackageResponceDto(eventPackage);
             packageDtos.add(packageDto);
             LOGGER.info("Package List fetche");
         }
@@ -74,20 +64,22 @@ public class EventPackageServiceImpl implements EventPackageService {
     @Override
     public PackageResponseDto getEventPackageByShortCode(String shortCode) {
         EventPackage eventPackage = eventPackageRepository.findOneByShortCode(shortCode);
-//        List<PackageDto> packageDtos = new ArrayList();
-        PackageResponseDto packageDto = new PackageResponseDto();
-        for (Item packageItem : eventPackage.getPackageItems()) {
-            ItemGroupResponseDto groupResponseDto = new ItemGroupResponseDto();
-            for (Item groupItem : packageItem.getGroupItems()) {
-                ItemResponseDto itemResponseDto = new ItemResponseDto();
-                BeanUtils.copyProperties(groupItem, itemResponseDto);
-                groupResponseDto.getItems().add(itemResponseDto);
-            }
-            BeanUtils.copyProperties(packageItem, groupResponseDto);
-            packageDto.getPackageItems().add(groupResponseDto);
+        PackageResponseDto packageDto = getPackageResponceDto(eventPackage);
+        return packageDto;
+    }
+
+    @Override
+    public List<?> getEventPackageByStatuses(StatusEnum[] statuses) {
+        LOGGER.info("Package List fetching Start");
+        Iterable<EventPackage> eventPackages = eventPackageRepository.findAllByStatusIn(statuses);
+        List<PackageResponseDto> packageDtos = new ArrayList();
+        for (EventPackage eventPackage : eventPackages) {
+            PackageResponseDto packageDto = getPackageResponceDto(eventPackage);
+            packageDtos.add(packageDto);
+            LOGGER.info("Package List fetche");
         }
 
-        return packageDto;
+        return packageDtos;
     }
 
     @Override
@@ -114,7 +106,7 @@ public class EventPackageServiceImpl implements EventPackageService {
     }
 
     @Override
-    public ResponseEntity updateEventPackage(PackageDto packageDto, String user) {
+    public ResponseEntity updateEventPackage(PackageDto packageDto, String user) throws Exception {
         try {
             BaseResponceDto responceDto = new BaseResponceDto();
             LOGGER.info("Start to Updsate Package : " + packageDto);
@@ -122,8 +114,15 @@ public class EventPackageServiceImpl implements EventPackageService {
             if (eventPackageOp.isPresent()) {
                 EventPackage eventPackage = eventPackageOp.get();
                 BeanUtils.copyProperties(packageDto, eventPackage);
-                Iterable<Item> items = itemRepository.findAllById(packageDto.getPackageItems());
-                List<Item> itemList = Lists.newArrayList(items);
+                List<Item> itemList = new ArrayList();
+                for (Integer packageItem : packageDto.getPackageItems()) {
+                    Optional<Item> item = itemRepository.findById(packageItem);
+                    if (item.isPresent()) {
+                        itemList.add(item.get());
+                    } else {
+                        throw new Exception("Item Not Found (ID : " + packageItem + ")");
+                    }
+                }
                 eventPackage.setPackageItems(itemList);
                 eventPackageRepository.save(eventPackage);
 
@@ -141,7 +140,30 @@ public class EventPackageServiceImpl implements EventPackageService {
             }
         } catch (Exception e) {
             LOGGER.error("Error in update Package", e);
-            throw e;
+            throw new Exception("Error in update Package");
         }
     }
+
+    private PackageResponseDto getPackageResponceDto(EventPackage eventPackage) {
+        List<ItemGroupResponseDto> groupResponseDtos = new ArrayList();
+        PackageResponseDto packageDto = new PackageResponseDto();
+        BeanUtils.copyProperties(eventPackage, packageDto);
+        for (Item packageItem : eventPackage.getPackageItems()) {
+            ItemGroupResponseDto groupResponseDto = new ItemGroupResponseDto();
+            BeanUtils.copyProperties(packageItem, groupResponseDto);
+            List<ItemResponseDto> itemResponseDtos = new ArrayList();
+            for (Item groupItem : packageItem.getGroupItems()) {
+                ItemResponseDto itemResponseDto = new ItemResponseDto();
+                BeanUtils.copyProperties(groupItem, itemResponseDto);
+                itemResponseDto.setCategory(groupItem.getCategory().getId());
+                itemResponseDtos.add(itemResponseDto);
+            }
+            groupResponseDto.setItems(itemResponseDtos);
+            groupResponseDto.setCategory(packageItem.getCategory().getId());
+            groupResponseDtos.add(groupResponseDto);
+        }
+        packageDto.setPackageItems(groupResponseDtos);
+        return packageDto;
+    }
+
 }

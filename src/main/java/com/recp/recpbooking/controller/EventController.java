@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,8 +74,7 @@ public class EventController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> addEvent(@ModelAttribute CreateEventRequestDto eventItemDto) {
-        String user = "";
+    public ResponseEntity<?> addEvent(@RequestBody CreateEventRequestDto eventItemDto, String user) {
         try {
             LOGGER.info("Event Creation Start");
             ResponseEntity responseEntity = eventService.saveEvent(eventItemDto, user);
@@ -91,8 +91,7 @@ public class EventController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> updateEvent(@ModelAttribute CreateEventRequestDto eventDto) {
-        String user = "";
+    public ResponseEntity<?> updateEvent(@RequestBody CreateEventRequestDto eventDto, String user) {
         try {
             LOGGER.info("Event Updated Start");
             ResponseEntity responseEntity = eventService.updateEvent(eventDto, user);

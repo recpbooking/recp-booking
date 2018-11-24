@@ -27,7 +27,7 @@ public class ItemCategory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String shortCord;
+    private String shortCode;
     private String name;
     private String itemPrefix;
     private String description;
@@ -45,12 +45,12 @@ public class ItemCategory implements Serializable {
         this.id = id;
     }
 
-    public String getShortCord() {
-        return shortCord;
+    public String getShortCode() {
+        return shortCode;
     }
 
-    public void setShortCord(String shortCord) {
-        this.shortCord = shortCord;
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 
     public String getName() {
@@ -103,7 +103,7 @@ public class ItemCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "ItemCategory{" + "id=" + id + ", shortCord=" + shortCord + ", name=" + name + ", itemPrefix=" + itemPrefix + ", description=" + description + ", status=" + status + ", items=" + items + '}';
+        return "ItemCategory{" + "id=" + id + ", shortCode=" + shortCode + ", name=" + name + ", itemPrefix=" + itemPrefix + ", description=" + description + ", status=" + status + ", items=" + items + '}';
     }
 
 }

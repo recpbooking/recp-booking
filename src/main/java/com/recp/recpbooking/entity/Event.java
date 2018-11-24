@@ -40,7 +40,9 @@ public class Event {
     @JoinColumn(name = "customer", nullable = false, referencedColumnName = "id")
     private Customer customer;
     private EventTypeEnum eventType;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date fromDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date toDate;
     private TimeSlotEnum timeSlot;
     private Integer qty;

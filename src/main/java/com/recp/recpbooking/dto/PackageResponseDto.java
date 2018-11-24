@@ -5,6 +5,7 @@
  */
 package com.recp.recpbooking.dto;
 
+import com.recp.recpbooking.common.StatusEnum;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class PackageResponseDto {
     private String shortCode;
     private Double amount;
     private Double maxDiscount;
-    private String status;
+    private StatusEnum status;
     private List<ItemGroupResponseDto> packageItems = new ArrayList<>();
 
     public Integer getId() {
@@ -71,11 +72,11 @@ public class PackageResponseDto {
         this.maxDiscount = maxDiscount;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

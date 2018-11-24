@@ -5,6 +5,8 @@
  */
 package com.recp.recpbooking.dto;
 
+import com.recp.recpbooking.common.StatusEnum;
+
 /**
  *
  * @author roshan_inova
@@ -19,7 +21,7 @@ public class CustomerDto {
     private String address1;
     private String address2;
     private String address3;
-    private String status;
+    private StatusEnum status;
 
     public Integer getId() {
         return id;
@@ -85,11 +87,11 @@ public class CustomerDto {
         this.address3 = address3;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

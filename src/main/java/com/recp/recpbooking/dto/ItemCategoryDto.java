@@ -5,7 +5,7 @@ import com.recp.recpbooking.common.StatusEnum;
 public class ItemCategoryDto {
 
     private Integer id;
-    private String shortCord;
+    private String shortCode;
     private String name;
     private String description;
     private StatusEnum status;
@@ -19,12 +19,12 @@ public class ItemCategoryDto {
         this.id = id;
     }
 
-    public String getShortCord() {
-        return shortCord;
+    public String getShortCode() {
+        return shortCode;
     }
 
-    public void setShortCord(String shortCord) {
-        this.shortCord = shortCord;
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 
     public String getName() {

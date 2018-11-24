@@ -67,8 +67,7 @@ public class CustomerController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createCustomer(@RequestBody CustomerDto customerDto) {
-        String user = "";
+    public ResponseEntity<?> createCustomer(@RequestBody CustomerDto customerDto, String user) {
         try {
             LOGGER.info("Customer Creating Start");
             ResponseEntity responseEntity = customerService.saveCustomer(customerDto, user);
@@ -85,8 +84,7 @@ public class CustomerController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto) {
-        String user = "";
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto, String user) {
         try {
             LOGGER.info("Customer Update Start");
             ResponseEntity responseEntity = customerService.updateCustomer(customerDto, user);

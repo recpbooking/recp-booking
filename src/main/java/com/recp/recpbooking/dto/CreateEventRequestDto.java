@@ -5,12 +5,10 @@
  */
 package com.recp.recpbooking.dto;
 
-import com.recp.recpbooking.entity.*;
 import com.recp.recpbooking.common.EventTypeEnum;
 import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.common.TimeSlotEnum;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,8 +20,6 @@ public class CreateEventRequestDto {
     private Long id;
     private Integer customer;
     private EventTypeEnum eventType;
-    private Date fromDate;
-    private Date toDate;
     private TimeSlotEnum timeSlot;
     private Integer qty;
     private PackageDto eventPackage;
@@ -38,12 +34,6 @@ public class CreateEventRequestDto {
     private Double amountPayble;
     private StatusEnum status;
     private List<CreateEventDetailRequestDto> eventDetails = new ArrayList<>();
-    /*
-    Audit History
-     */
-    private Date created;
-    private Date updated;
-    private String createdBy;
 
     public Long getId() {
         return id;
@@ -67,22 +57,6 @@ public class CreateEventRequestDto {
 
     public void setEventType(EventTypeEnum eventType) {
         this.eventType = eventType;
-    }
-
-    public Date getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
-
-    public Date getToDate() {
-        return toDate;
-    }
-
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
     }
 
     public TimeSlotEnum getTimeSlot() {
@@ -197,33 +171,9 @@ public class CreateEventRequestDto {
         this.eventDetails = eventDetails;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     @Override
     public String toString() {
-        return "Event{" + "id=" + id + ", customer=" + customer + ", eventType=" + eventType + ", fromDate=" + fromDate + ", toDate=" + toDate + ", timeSlot=" + timeSlot + ", qty=" + qty + ", eventPackage=" + eventPackage.getShortCode() + '}';
+        return "Event{" + "id=" + id + ", customer=" + customer + ", eventType=" + eventType + ",timeSlot=" + timeSlot + ", qty=" + qty + ", eventPackage=" + eventPackage.getShortCode() + '}';
     }
 
 }

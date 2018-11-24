@@ -46,7 +46,7 @@ public class ItemCategoryController {
     public ResponseEntity<?>
             getItemCategoryListByStatuses(@RequestParam StatusEnum[] statuses) {
         LOGGER.info("ItemCategory List By Statuses fetching Start");
-        List<ItemCategoryDto> itemCategoryDtos = itemCategoryService.getItemCategoryByStatus(statuses);
+        List<ItemCategoryDto> itemCategoryDtos = itemCategoryService.findAllByStatusIn(statuses);
         LOGGER.info("ItemCategory List By Statuses successfuly Fetched");
         return ResponseEntity.ok(itemCategoryDtos);
     }

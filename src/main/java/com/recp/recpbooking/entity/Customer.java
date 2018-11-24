@@ -5,6 +5,7 @@
  */
 package com.recp.recpbooking.entity;
 
+import com.recp.recpbooking.common.StatusEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +41,7 @@ public class Customer implements Serializable {
     private String address1;
     private String address2;
     private String address3;
-    private String status;
+    private StatusEnum status;
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @Column(name = "created", nullable = false)
@@ -121,11 +122,11 @@ public class Customer implements Serializable {
         this.address3 = address3;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

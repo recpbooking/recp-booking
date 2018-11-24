@@ -6,6 +6,7 @@
 package com.recp.recpbooking.entity;
 
 import com.recp.recpbooking.common.StatusEnum;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,12 +23,12 @@ import org.hibernate.annotations.UpdateTimestamp;
  * @author Roshan_inova
  */
 @Entity
-public class TransactionCategory {
+public class TransactionCategory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String shoreCode;
+    private String shortCode;
     private String name;
     private String description;
     /*
@@ -52,12 +53,12 @@ public class TransactionCategory {
         this.id = id;
     }
 
-    public String getShoreCode() {
-        return shoreCode;
+    public String getShortCode() {
+        return shortCode;
     }
 
-    public void setShoreCode(String shoreCode) {
-        this.shoreCode = shoreCode;
+    public void setShortCode(String shoreCode) {
+        this.shortCode = shoreCode;
     }
 
     public String getName() {
@@ -106,6 +107,11 @@ public class TransactionCategory {
 
     public void setStatus(StatusEnum status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionCategory{" + "id=" + id + ", shortCode=" + shortCode + ", name=" + name + ", description=" + description + ", created=" + created + ", updated=" + updated + ", createdBy=" + createdBy + ", status=" + status + '}';
     }
 
 }

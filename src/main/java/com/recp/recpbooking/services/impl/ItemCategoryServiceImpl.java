@@ -55,7 +55,7 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
     }
 
     @Override
-    public List<ItemCategoryDto> getItemCategoryByStatus(StatusEnum[] status) {
+    public List<ItemCategoryDto> findAllByStatusIn(StatusEnum[] status) {
 
         LOGGER.info("Start fetching Transaction categories by Status");
         Iterable<ItemCategory> transactionCategorys = itemCategoryRepository.findAllByStatusIn(status);

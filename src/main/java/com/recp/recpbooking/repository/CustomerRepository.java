@@ -5,6 +5,7 @@
  */
 package com.recp.recpbooking.repository;
 
+import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.entity.Customer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
-    Iterable<Customer> findAllByStatus(String status);
+    Iterable<Customer> findAllByStatus(StatusEnum status);
 
     Iterable<Customer> findByNameIgnoreCaseLike(String name);
 
-    Customer findOneByStatusAndMobileNo(String status, String mobileNo);
+    Customer findOneByStatusAndMobileNo(StatusEnum status, String mobileNo);
 }

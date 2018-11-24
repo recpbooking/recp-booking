@@ -5,6 +5,7 @@
  */
 package com.recp.recpbooking.services;
 
+import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.dto.PackageDto;
 import com.recp.recpbooking.dto.PackageItemDto;
 import com.recp.recpbooking.dto.PackageResponseDto;
@@ -23,5 +24,7 @@ public interface EventPackageService {
 
     public ResponseEntity saveEventPackage(PackageItemDto packageItemDto, String user);
     
-    public ResponseEntity updateEventPackage(PackageDto packageDto, String user);
+    public ResponseEntity updateEventPackage(PackageDto packageDto, String user) throws Exception;
+
+    public List<?> getEventPackageByStatuses(StatusEnum[] statuses);
 }

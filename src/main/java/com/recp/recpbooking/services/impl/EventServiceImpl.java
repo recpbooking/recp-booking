@@ -30,12 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Roshan_inova
  */
 @Service
+@Transactional
 public class EventServiceImpl implements EventService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
@@ -127,6 +129,7 @@ public class EventServiceImpl implements EventService {
                 event.getEventDetails().add(eventDetail);
             }
             BeanUtils.copyProperties(eventDto, event);
+            event.setCreatedBy(user);
             eventRepository.save(event);
 
             responceDto.setErrorCode(HttpStatus.CREATED.value());
@@ -161,6 +164,7 @@ public class EventServiceImpl implements EventService {
                 event.getEventDetails().add(eventDetail);
             }
             BeanUtils.copyProperties(eventDto, event);
+            event.setUpdatedBy(user);
             eventRepository.save(event);
 
             responceDto.setErrorCode(HttpStatus.CREATED.value());

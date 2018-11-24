@@ -1,5 +1,6 @@
 package com.recp.recpbooking.entity;
 
+import com.recp.recpbooking.common.StatusEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,7 @@ public class EventPackage implements Serializable {
     private String shortCode;
     private Double amount;
     private Double maxDiscount;
-    private String status;
+    private StatusEnum status;
 //    @OneToMany(cascade = CascadeType.ALL,
 //            fetch = FetchType.LAZY,
 //            mappedBy = "eventPackages")
@@ -111,11 +112,11 @@ public class EventPackage implements Serializable {
         this.maxDiscount = maxDiscount;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

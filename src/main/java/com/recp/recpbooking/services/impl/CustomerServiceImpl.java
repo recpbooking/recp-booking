@@ -14,6 +14,7 @@ import com.recp.recpbooking.repository.CustomerRepository;
 import com.recp.recpbooking.services.CustomerService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,12 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author roshan_inova
  */
 @Service
+@Transactional
 public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
@@ -36,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> getCustomerList() {
-        Iterable<Customer> cuustomers = customerRepository.findAllByStatus(StatusEnum.ACTIVE.toString());
+        Iterable<Customer> cuustomers = customerRepository.findAllByStatus(StatusEnum.ACTIVE);
         List<CustomerDto> customerDtos = new ArrayList();
         for (Customer customer : cuustomers) {
             CustomerDto itemDto = new CustomerDto();
@@ -49,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto getCustomerListByMobileNo(String mobileNo) {
-        Customer customer = customerRepository.findOneByStatusAndMobileNo(StatusEnum.ACTIVE.toString(), mobileNo);
+        Customer customer = customerRepository.findOneByStatusAndMobileNo(StatusEnum.ACTIVE, mobileNo);
 
         CustomerDto customerDto = new CustomerDto();
         BeanUtils.copyProperties(customer, customerDto);
@@ -59,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> getCustomerListByNameLike(String name) {
-        Iterable<Customer> customers = customerRepository.findByNameIgnoreCaseLike(name);
+        Iterable<Customer> customers = customerRepository.findByNameIgnoreCaseLike("%"+name+"%");
         List<CustomerDto> customerDtos = new ArrayList();
         for (Customer customer : customers) {
             CustomerDto customerDto = new CustomerDto();
@@ -94,13 +97,22 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             LOGGER.info("Customer Save Init : " + customerDto);
             BaseResponceDto responceDto = new BaseResponceDto();
-            Customer customer = new Customer();
+            Optional<Customer> customerO = customerRepository.findById(customerDto.getId());
+            if(customerO.isPresent()){
+                Customer customer = customerO.get();
             BeanUtils.copyProperties(customerDto, customer);
+            customer.setUpdatedBy(user);
             customerRepository.save(customer);
             responceDto.setErrorCode(HttpStatus.CREATED.value());
             responceDto.setErrorMessage(ResponseMessage.customerUpdateSuccess);
             responceDto.setErrorType(StatusEnum.SUCCESS.toString());
-            LOGGER.info("Customer Saved successful");
+            LOGGER.info("Customer updated successful");
+            } else {
+            responceDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            responceDto.setErrorMessage("Customr Not Found");
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            LOGGER.info("Customer updating failed");
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body(responceDto);
         } catch (Exception e) {
             LOGGER.error("Customer Saving Failed", e);

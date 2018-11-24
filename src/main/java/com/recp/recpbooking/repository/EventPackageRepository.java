@@ -5,7 +5,9 @@
  */
 package com.recp.recpbooking.repository;
 
+import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.entity.EventPackage;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +19,6 @@ import org.springframework.stereotype.Repository;
 public interface EventPackageRepository extends CrudRepository<EventPackage, Integer> {
 
     EventPackage findOneByShortCode(String shortCode);
+
+    Iterable<EventPackage> findAllByStatusIn(StatusEnum[] statuses);
 }

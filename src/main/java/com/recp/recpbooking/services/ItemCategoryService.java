@@ -11,5 +11,5 @@ public interface ItemCategoryService {
 
     public ItemCategoryDto getItemCategoryByShortCode(String shortCode);
 
-    List<ItemCategoryDto> getItemCategoryByStatus(StatusEnum[] status);
+    List<ItemCategoryDto> findAllByStatusIn(StatusEnum[] status);
 }

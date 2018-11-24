@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -199,6 +198,7 @@ public class ItemServiceImpl implements ItemService {
         for (Item item : items) {
             ItemDto itemDto = new ItemDto();
             BeanUtils.copyProperties(item, itemDto);
+            itemDto.setCategory(item.getCategory().getId());
             itemDtos.add(itemDto);
         }
 
@@ -212,9 +212,11 @@ public class ItemServiceImpl implements ItemService {
         for (Item item : items) {
             ItemGroupResponseDto itemGroupDto = new ItemGroupResponseDto();
             BeanUtils.copyProperties(item, itemGroupDto);
+            itemGroupDto.setCategory(item.getCategory().getId());
             for (Item groupItem : item.getGroupItems()) {
                 ItemResponseDto dto = new ItemResponseDto();
                 BeanUtils.copyProperties(groupItem, dto);
+                dto.setCategory(groupItem.getCategory().getId());
                 itemGroupDto.getItems().add(dto);
 
             }
@@ -265,6 +267,7 @@ public class ItemServiceImpl implements ItemService {
         if (item != null) {
             ItemResponseDto itemDto = new ItemResponseDto();
             BeanUtils.copyProperties(item, itemDto);
+            itemDto.setCategory(item.getCategory().getId());
             return itemDto;
         }
         return null;
@@ -274,20 +277,17 @@ public class ItemServiceImpl implements ItemService {
     public ItemGroupResponseDto getGroupByShortCode(String shortCode) {
         Item item = itemRepository.findOneByIsGroupAndShortCode(true, shortCode);
         if (item != null) {
-            ItemGroupResponseDto itemGroupResponseDto = new ItemGroupResponseDto();
-            BeanUtils.copyProperties(item, itemGroupResponseDto);
-            return itemGroupResponseDto;
+            ItemGroupResponseDto itemGroupDto = new ItemGroupResponseDto();
+            BeanUtils.copyProperties(item, itemGroupDto);
+            itemGroupDto.setCategory(item.getCategory().getId());
+            for (Item groupItem : item.getGroupItems()) {
+                ItemResponseDto dto = new ItemResponseDto();
+                BeanUtils.copyProperties(groupItem, dto);
+                dto.setCategory(groupItem.getCategory().getId());
+                itemGroupDto.getItems().add(dto);
+            }
+            return itemGroupDto;
         }
-
-        ItemGroupResponseDto itemGroupDto = new ItemGroupResponseDto();
-        BeanUtils.copyProperties(item, itemGroupDto);
-        for (Item groupItem : item.getGroupItems()) {
-            ItemResponseDto dto = new ItemResponseDto();
-            BeanUtils.copyProperties(groupItem, dto);
-            itemGroupDto.getItems().add(dto);
-
-        }
-
         return null;
     }
 
