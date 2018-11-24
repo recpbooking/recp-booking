@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,7 +38,7 @@ public class EventPackage implements Serializable {
 //            mappedBy = "eventPackages")
 //    
 //    private List<Item> itemGroups = new ArrayList();
-    
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "packageItems",
             joinColumns = {
@@ -56,6 +57,11 @@ public class EventPackage implements Serializable {
     @Column(name = "updated", nullable = false)
     private Date updated;
     private String updatedBy;
+
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "eventPackage")
+    private List<Event> event = new ArrayList<>();
 
     public Integer getId() {
         return id;

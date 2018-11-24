@@ -22,8 +22,17 @@ public class ResponseMessage {
     public static String packageSavedFailed = "Package Creating failed.";
     public static String packageUpdatingFailed = "Package Updating Failed.";
 
+    public static String eventUpdatedSuccess = "Event successfuly Updated.";
+    public static String eventSavedFailed = "Event Creating failed.";
+    public static String eventUpdatingFailed = "Event Updating Failed.";
+
     public static String customerSavedSuccess = "Customer successfuly Created.";
     public static String customerSavedFailed = "Customer Creating failed.";
     public static String customerUpdateSuccess = "Customer successfuly updated.";
     public static String customerUpdatingFailed = "Customer Updating failed.";
+
+    public static String paymentSavedSuccess = "Transaction successfuly saved.";
+    public static String paymentCanceledSuccess = "Transaction cancelation successful.";
+    public static String paymentSavedFailed = "Transaction failed.";
+    public static String paymentCancelationFailed = "Transaction cancelation failed.";
 }

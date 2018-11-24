@@ -66,22 +66,40 @@ public class CustomerController {
         return ResponseEntity.ok(customerDtos);
     }
 
-          @PutMapping("/")
-    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto) {
+    @PostMapping("/")
+    public ResponseEntity<?> createCustomer(@RequestBody CustomerDto customerDto) {
         String user = "";
         try {
-            LOGGER.info("Customer Update Start");
-            ResponseEntity responseEntity = customerService.updateCustomer(customerDto, user);
+            LOGGER.info("Customer Creating Start");
+            ResponseEntity responseEntity = customerService.saveCustomer(customerDto, user);
             LOGGER.info("Customer Created successfuly");
             return responseEntity;
         } catch (Exception e) {
             LOGGER.error("Customer Update error", e);
             BaseResponceDto responceDto = new BaseResponceDto();
             responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
-            responceDto.setErrorMessage(ResponseMessage.itemSavedFailed);
+            responceDto.setErrorMessage(ResponseMessage.customerSavedFailed);
             responceDto.setErrorType(StatusEnum.ERROR.toString());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
         }
     }
-       
+
+    @PutMapping("/")
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto) {
+        String user = "";
+        try {
+            LOGGER.info("Customer Update Start");
+            ResponseEntity responseEntity = customerService.updateCustomer(customerDto, user);
+            LOGGER.info("Customer Updated successfuly");
+            return responseEntity;
+        } catch (Exception e) {
+            LOGGER.error("Customer Update error", e);
+            BaseResponceDto responceDto = new BaseResponceDto();
+            responceDto.setErrorCode(HttpStatus.EXPECTATION_FAILED.value());
+            responceDto.setErrorMessage(ResponseMessage.customerUpdatingFailed);
+            responceDto.setErrorType(StatusEnum.ERROR.toString());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responceDto);
+        }
+    }
+
 }

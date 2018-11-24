@@ -17,5 +17,6 @@ public enum StatusEnum {
     COMPLEATED,
     ERROR,
     VALID,
-    INVALID
+    INVALID,
+    CANCELED
 }

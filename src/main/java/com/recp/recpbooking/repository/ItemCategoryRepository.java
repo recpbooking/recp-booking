@@ -5,6 +5,7 @@
  */
 package com.recp.recpbooking.repository;
 
+import com.recp.recpbooking.common.StatusEnum;
 import com.recp.recpbooking.entity.ItemCategory;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ItemCategoryRepository extends CrudRepository<ItemCategory, Integer>{
+
+    public ItemCategory findOneByShortCode(String shortCode);
+
+    public Iterable<ItemCategory> findAllByStatusIn(StatusEnum[] status);
    
 }

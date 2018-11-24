@@ -29,6 +29,7 @@ public class ItemCategory implements Serializable {
     private Integer id;
     private String shortCord;
     private String name;
+    private String itemPrefix;
     private String description;
     private StatusEnum status;
     @OneToMany(cascade = CascadeType.ALL,
@@ -58,6 +59,14 @@ public class ItemCategory implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getItemPrefix() {
+        return itemPrefix;
+    }
+
+    public void setItemPrefix(String itemPrefix) {
+        this.itemPrefix = itemPrefix;
     }
 
     public String getDescription() {
@@ -94,7 +103,7 @@ public class ItemCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "ItemCategory{" + "id=" + id + ", shortCord=" + shortCord + ", name=" + name + ", description=" + description + ", status=" + status + ", items=" + items + '}';
+        return "ItemCategory{" + "id=" + id + ", shortCord=" + shortCord + ", name=" + name + ", itemPrefix=" + itemPrefix + ", description=" + description + ", status=" + status + ", items=" + items + '}';
     }
 
 }
