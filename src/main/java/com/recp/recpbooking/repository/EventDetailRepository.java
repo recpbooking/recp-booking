@@ -5,7 +5,7 @@
  */
 package com.recp.recpbooking.repository;
 
-import com.recp.recpbooking.entity.Event;
+import com.recp.recpbooking.entity.EventDetail;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
