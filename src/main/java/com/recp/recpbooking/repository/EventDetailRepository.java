@@ -6,7 +6,6 @@
 package com.recp.recpbooking.repository;
 
 import com.recp.recpbooking.entity.EventDetail;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Repository;
  * @author Roshan_inova
  */
 @Repository
-public interface EventRepository extends CrudRepository<EventDetail, Integer> {
+public interface EventDetailRepository extends CrudRepository<EventDetail, Integer> {
 
-    Iterable<Event> findByStatus(String status);
+    Iterable<EventDetail> findByStatus(String status);
 
-    @Query(value = "", nativeQuery = true)
-    Iterable<Event> getEvenByFromDate(String fromDate);
+//    @Query(value = "", nativeQuery = true)
+//    Iterable<EventDetail> getEvenByFromDate(String fromDate);
 }
