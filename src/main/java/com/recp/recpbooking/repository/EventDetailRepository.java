@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * @author Roshan_inova
  */
 @Repository
-public interface EventRepository extends CrudRepository<Event, Integer> {
+public interface EventRepository extends CrudRepository<EventDetail, Integer> {
 
     Iterable<Event> findByStatus(String status);
 
